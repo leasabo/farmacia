@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Farmacia;
 use Illuminate\Http\Request;
+use App\Helpers\Haversine;
 
 class FarmaciaController extends Controller
 {
@@ -90,4 +91,28 @@ class FarmaciaController extends Controller
             ], 404);
         }
     }
+
+    //TODO: Contemplar que no hayan farmacias cargadas
+    public function farmaciaCercana($lat, $lon){
+        $farmaciaMasCercana = null;
+        $distanciaMinima = PHP_FLOAT_MAX;
+        
+        foreach (Farmacia::all() as $farmacia) {
+            $latFarma = $farmacia->latitud;
+            $lonFarma = $farmacia->longitud;
+            $distancia = Haversine::calcularDistancia($lat, $lon, $latFarma, $lonFarma);
+            if ($distanciaMinima>$distancia) {
+                $distanciaMinima=$distancia;
+                $farmaciaMasCercana = $farmacia->id;
+            }   
+        }
+
+        $farmacia = Farmacia::find($farmaciaMasCercana);
+
+        return response()->json([
+            "msg" => "Farmacia más cercana",
+            "data" => $farmacia
+        ], 200);
+    }
+
 }
