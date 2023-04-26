@@ -41,7 +41,17 @@ class FarmaciaController extends Controller
     }
 
     public function show($id){
-        
+        if ( Farmacia::where(["id"=>$id])->exists() ) {
+            $farmacia = Farmacia::where(["id"=>$id])->first();
+            return response()->json([
+                "msg" => "Datos de la farmacia solicitada",
+                "data" => $farmacia
+            ], 200);
+        }else {
+            return response()->json([
+                "msg" => "La farmacia no fue encontrada"
+            ], 404);
+        }
     }
 
     public function update(Request $request, $id){

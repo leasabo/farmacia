@@ -26,7 +26,7 @@ Route::delete('delete-farmacia/{id}', [ApiFarmaciaController::class, 'delete']);
 
 //Ruta para la farmacia más cercana
 //GET http://localhost:<port>/api/farmacia?lat=<number>&lon=<number>
-// Route::get('/farmacia?lat={lat}&lon={lon}', 'FarmaciaController@buscarFarmaciaCercana')
+Route::get('/farmacia?lat={lat}&lon={lon}', [ApiFarmaciaController::class, 'farmaciaCercana']);
 
 //TODO: Agregar condición del where para la ruta anterior
 // ->where([
