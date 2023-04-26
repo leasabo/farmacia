@@ -17,7 +17,28 @@ use Illuminate\Support\Facades\App\Controllers\Api\FarmaciaController;
 |
 */
 
-Route::post('crear', [ApiFarmaciaController::class, 'crear']);
+//Rutas CRUD
+Route::post('create-farmacia', [ApiFarmaciaController::class, 'create']);
+Route::get('list-farmacia', [ApiFarmaciaController::class, 'list']);
+Route::get('show-farmacia/{id}', [ApiFarmaciaController::class, 'show']);
+Route::put('update-farmacia/{id}', [ApiFarmaciaController::class, 'update']);
+Route::delete('delete-farmacia/{id}', [ApiFarmaciaController::class, 'delete']);
+
+//Ruta para la farmacia más cercana
+//GET http://localhost:<port>/api/farmacia?lat=<number>&lon=<number>
+// Route::get('/farmacia?lat={lat}&lon={lon}', 'FarmaciaController@buscarFarmaciaCercana')
+
+//TODO: Agregar condición del where para la ruta anterior
+// ->where([
+//     'lat' => '[0-9.-]+',
+//     'lon' => '[0-9.-]+'
+// ]);
+
+// Route::get('colaboradores/{nombre}', function($nombre){
+// 	return "Mostrando el colaborador $nombre";
+// })->where(array('nombre' => '[a-zA-Z]+'));
+
+
 //Route::post('login', [ApiFarmaciaController::class, 'login']);
 
 //Grupo de rutas pensado por si se implementa login
