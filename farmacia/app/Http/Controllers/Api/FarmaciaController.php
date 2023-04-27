@@ -93,9 +93,11 @@ class FarmaciaController extends Controller
     }
 
     //TODO: Contemplar que no hayan farmacias cargadas
-    public function farmaciaCercana($lat, $lon){
+    public function farmaciaCercana(Request $request){
         $farmaciaMasCercana = null;
         $distanciaMinima = PHP_FLOAT_MAX;
+        $lat = $request->query('lat');
+        $lon = $request->query('lon');
         
         foreach (Farmacia::all() as $farmacia) {
             $latFarma = $farmacia->latitud;
