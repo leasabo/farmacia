@@ -18,14 +18,14 @@ use Illuminate\Support\Facades\App\Controllers\Api\FarmaciaController;
 */
 
 //Rutas CRUD
-Route::post('create-farmacia', [ApiFarmaciaController::class, 'create']);
-Route::get('list-farmacia', [ApiFarmaciaController::class, 'list']);
-Route::get('show-farmacia/{id}', [ApiFarmaciaController::class, 'show']);
-Route::put('update-farmacia/{id}', [ApiFarmaciaController::class, 'update']);
-Route::delete('delete-farmacia/{id}', [ApiFarmaciaController::class, 'delete']);
+Route::post('farmacia', [ApiFarmaciaController::class, 'create']);
+Route::get('farmacia', [ApiFarmaciaController::class, 'list']);
+Route::get('farmacia/{id}', [ApiFarmaciaController::class, 'show']);
+Route::put('farmacia/{id}', [ApiFarmaciaController::class, 'update']);
+Route::delete('farmacia/{id}', [ApiFarmaciaController::class, 'delete']);
 
 //Ruta para la farmacia más cercana
 //GET http://localhost:<port>/api/farmacia?lat=<number>&lon=<number>
-Route::get('/farmacia', [ApiFarmaciaController::class, 'farmaciaCercana']);
+Route::get('farmacia', [ApiFarmaciaController::class, 'farmaciaCercana']);
 
 //TODO: Definir condiciones para los valores de la URL
