@@ -1,64 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Proyecto Farmacia CRUD
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este es un proyecto de Laravel que utiliza Docker para facilitar su despliegue en diferentes entornos.
 
-## About Laravel
+## Instalación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Clonar el repositorio:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```
+git clone https://github.com/leasabo/farmacia.git
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. Entrar al directorio del proyecto:
 
-## Learning Laravel
+```
+cd farma
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. Copiar el archivo `.env.example` a `.env`:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+cp .env.example .env
+```
 
-## Laravel Sponsors
+4. Configurar las variables de entorno en el archivo `.env` según los datos suministrados por correo.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+5. Construir y ejecutar los contenedores de Docker:
 
-### Premium Partners
+```
+docker-compose up -d --build
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+6. Acceder al proyecto en el navegador web en la dirección `http://localhost:8080` para corroborar que el proyecto haya sido levantado exitosamente. A continuación se puede usar Postman o un programa similar par aprobar los endpoints de la API.
 
-## Contributing
+## Endpoints de la API
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+El proyecto cuenta con los siguientes endpoints para la API:
 
-## Code of Conduct
+- `POST /farmacia`: Crea una nueva farmacia. Se debe enviar un JSON con la información de la farmacia a crear en el cuerpo de la petición. Retorna un JSON con la información de la farmacia creada.
+    Ejemplo:
+    {
+    "nombre":"Farmacia la Tradición SCS",
+    "direccion":"La Rioja 798, Corrientes",
+    "latitud":"-27.46631740",
+    "longitud":"-58.85149940"
+    }
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- `GET /farmacia/{id}`: Obtiene la información de una farmacia por su ID. Retorna un JSON con la información de la farmacia encontrada.
 
-## Security Vulnerabilities
+- `GET /farmacia`: Obtiene la farmacia más cercana a una ubicación dada. Se debe enviar los parámetros `lat` y `lon` con la ubicación en el query string de la petición. Retorna un JSON con la información de la farmacia encontrada.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Pruebas Unitarias
 
-## License
+El proyecto cuenta con pruebas unitarias para las operaciones de creación de farmacia:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `testCrearFarmaciaExitoso()`: Prueba la creación exitosa de una farmacia.
+
+- `testCrearFarmaciaError()`: Prueba la creación de una farmacia con información faltante.
+
+- `FarmaciaCercanaTest` : Prueba la muestra de la farmacia más cercana a la ciudad de Belén, Catamarca. Para probar este test, previamente se tienen que tener cargadas estas farmacias:
+
++----------------------------+-----------------------------------------+--------------+--------------+
+| nombre                     | direccion                               | latitud      | longitud     |
++----------------------------+-----------------------------------------+--------------+--------------+
+| Polini                     | Mariano Moreno 197, Sáenz Peña, Chaco   | -26.79235540 | -60.44526770 |
+| Schvening                  | Avellaneda 138, Coronel Du Graty, Chaco | -27.68551130 | -60.91201020 |
+| Farmar                     | Av. San Martín 221, Resistencia, Chaco  | -27.45689950 | -58.98621540 |
+| Farmacia la Tradición SCS  | La Rioja 798, Corrientes                | -27.46631740 | -58.85149940 |
++----------------------------+-----------------------------------------+--------------+--------------+
+
+Para ejecutar las pruebas unitarias, se debe ejecutar el siguiente comando:
+
+```
+docker-compose exec app php artisan test
+```
+
+## Listado de TODO's:
+- Definir condiciones para los valores de la URL en las rutas.
+- Definir e implementar excepciones propias.
+- Evaluar la posibilidad de crear otras tablas (para desglosar la dirección por ejemplo).
+- Contemplar distintos casos de error y tratarlos con excepciones propias.
+- Limitar lo que el usuario pueda ingresar como valores.
+- Documentar la API con Swagger (quedó instalado el paquete, solo faltó configurarlo).
+- Evaluar el estándar y el linter utilizado para elegir mejores. En este caso se utilizó PSR-12 con PHP_CodeSniffer .
+- Plantear un esquema de bifurcación. Podría ser git-flow, pero con un proyecto de esta envergadura no creo que valga la pena. En principio se pretendió solamente usar la rama master. Después se creyó mejor utilizar una rama para MVC y otra para clean architecture (trasladando toda la lógica a esta nueva arquitectura).
+- Terminar el desarrollo con el enfoque de multicapas.
+- Utilizar Ngnix en vez de Apache.
+- Correr los contenedores en una instancia virtual de Oracle Cloud que tengo en uso.
+- Renombrar las variables, entidades y distintos conceptos a inglés.

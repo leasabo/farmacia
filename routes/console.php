@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-/**
- * @OA\Info(
- *     title="Título de prueba",
- *     version="1.0.0",
- *     description="Descripción de prueba"
- * )
- */
-
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

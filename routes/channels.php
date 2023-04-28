@@ -12,13 +12,6 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
-/**
- * @OA\Info(
- *     title="Título de prueba",
- *     version="1.0.0",
- *     description="Descripción de prueba"
- * )
- */
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;

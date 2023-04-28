@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/**
- * @OA\Info(
- *     title="Título de prueba",
- *     version="1.0.0",
- *     description="Descripción de prueba"
- * )
- */
-
 Route::get('/', function () {
     return view('welcome');
 });
