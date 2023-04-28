@@ -59,6 +59,7 @@ class FarmaciaController extends Controller
         if ( Farmacia::where(["id"=>$id])->exists() ) {
             $farmacia = Farmacia::find($id);
 
+            //Si algún valor no es proporcionado, queda el que ya tenía
             $farmacia->nombre = isset($request->nombre) ? $request->nombre: $farmacia->nombre;
             $farmacia->direccion = isset($request->direccion) ? $request->direccion: $farmacia->direccion;
             $farmacia->latitud = isset($request->latitud) ? $request->latitud: $farmacia->latitud;

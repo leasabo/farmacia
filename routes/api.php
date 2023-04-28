@@ -6,6 +6,14 @@ use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\App\Controllers\Api\FarmaciaController;
 
+/**
+ * @OA\Info(
+ *     title="API para farmacias",
+ *     version="1.0.0",
+ *     description="Documentación de la API de farmacias"
+ * )
+ */
+
 /*
 |--------------------------------------------------------------------------
 | API Routes

@@ -1,85 +1,58 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.3-apache
 
-# Install required packages
-RUN apk add --no-cache git curl libmcrypt-dev libxml2-dev libpng-dev freetype-dev libjpeg-turbo-dev libzip-dev && \
-    docker-php-ext-install pdo_mysql soap gd zip exif bcmath pcntl && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+###########################################################################
+# ENVIRONMENT
+###########################################################################
+ARG ENV=production
+ENV ENV=${ENV}
 
-# Install node.js and npm
-RUN apk add --no-cache nodejs npm
+###########################################################################
+# APACHE CONFIG
+###########################################################################
+RUN a2enmod rewrite
+RUN a2enmod headers
 
-# Establece las variables de entorno necesarias para la conexión con la base de datos
-ENV DB_CONNECTION=mysql
-ENV DB_HOST=db
-ENV DB_PORT=3306
-ENV DB_DATABASE=farmacia
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=delfin23
+# Always run apt update when start and after add new source list, then clean up at end.
+RUN set -xe; \
+	apt-get update -yqq && \
+	pecl channel-update pecl.php.net && \
+	apt-get install -yqq \
+	apt-utils \
+	libzip-dev zip unzip \
+	nano vim
 
-# Instala el cliente de MySQL y establece las variables de entorno necesarias para el cliente de MySQL
-RUN apk update && apk add mysql-client
+###########################################################################
 
-# Set working directory
-WORKDIR /app
+ARG TZ=UTC
+ENV TZ ${TZ}
 
-# Copy application files
-COPY . /app
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install PHP dependencies
-RUN composer install --no-dev
+###########################################################################
+# EXTENSIONS
+###########################################################################
+RUN docker-php-ext-install \
+	zip \
+	mysqli \
+	pdo_mysql
 
-# Build assets
-RUN npm install && npm run production
+###########################################################################
+# COMPOSER
+###########################################################################
+COPY --from=composer:2.0.8 /usr/bin/composer /usr/bin/composer
+RUN mkdir /var/www/.composer
+RUN chown -R www-data:www-data /var/www/.composer
+RUN chmod 777 -R /var/www/.composer
+RUN chmod 757 -R /tmp
 
-# Set file permissions
-RUN chown -R www-data:www-data /app && \
-    chmod -R 755 /app/storage
+###########################################################################
+# GIT
+###########################################################################
+RUN apt update && apt install -y git git-flow
 
-# Ejecuta el comando de migración de la base de datos
-CMD php artisan migrate
-
-# # Define la imagen base de PHP
-# FROM php:7.4-apache
-
-# # Establece el directorio de trabajo en el contenedor
-# WORKDIR /var/www/html
-
-# # Copia los archivos del proyecto al contenedor
-# COPY . .
-
-# # Actualiza el índice de paquetes y luego instala las dependencias necesarias
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     git \
-#     unzip \
-#     libzip-dev \
-#     && docker-php-ext-install zip \
-#     && pecl install xdebug \
-#     && docker-php-ext-enable xdebug \
-#     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-#     && composer install --no-scripts --no-autoloader
-
-# # Copia el archivo de configuración de Apache
-# COPY docker/apache2.conf /etc/apache2/sites-available/000-default.conf
-
-# # Habilita el módulo mod_rewrite de Apache
-# RUN a2enmod rewrite
-
-# # Establece las variables de entorno necesarias para la conexión con la base de datos
-# ENV DB_CONNECTION=mysql
-# ENV DB_HOST=db
-# ENV DB_PORT=3307
-# ENV DB_DATABASE=farmacia
-# ENV DB_USERNAME=root
-# ENV DB_PASSWORD=delfin23
-
-# # Instala el cliente de MySQL y establece las variables de entorno necesarias para el cliente de MySQL
-# RUN apt-get update && \
-#     apt-get install -y default-mysql-client && \
-#     echo "export MYSQL_PWD=${DB_PASSWORD}" >> /etc/apache2/envvars
-
-# # Expone el puerto 80
-# EXPOSE 80
-
-# # Ejecuta el comando de migración de la base de datos
-# CMD php artisan migrate && apache2-foreground
+###########################################################################
+# PHP INI
+###########################################################################
+COPY ./php.ini /usr/local/etc/php/php.ini
+COPY ./server.sh /
+RUN chmod +x /server.sh

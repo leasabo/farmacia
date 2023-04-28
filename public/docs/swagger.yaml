@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Mi API
+  description: Descripción de mi API
+  termsOfService: "http://localhost/terms/"
+  contact:
+    name: Equipo de soporte
+    url: http://localhost/support/
+    email: support@localhost.com
+  license:
+    name: Licencia Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
